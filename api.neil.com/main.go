@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"helloclick/api.neil.com/middlewares"
 	"net/http"
 )
-
-var ApiToken = "Authorized"
 
 type Hello struct {
 	Name    string `form:"name" `
@@ -65,31 +63,10 @@ func helloOptions(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "pong"})
 }
 
-func middleWare() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		fmt.Println("it is my middle Ware!")
-		contentType := c.Request.Header.Get("Content-Type")
-		ContentLength := c.Request.Header.Get("Content-Length")
-		UserAgent := c.Request.Header.Get("User-Agent")
-		token := c.Request.Header.Get("token")
-		fmt.Println(contentType)
-		fmt.Println(ContentLength)
-		fmt.Println(UserAgent)
-		fmt.Println(token)
-		// find api tokens in redis
-		// yum redis in vmware
-		if token != ApiToken {
-			c.JSON(http.StatusNonAuthoritativeInfo,
-				gin.H{"message": "no authorize"})
-			c.Abort()
-		}
-	}
-}
-
 func main() {
 	//default mode , include Logger Recovery middle ware
 	r := gin.Default()
-	r.Use(middleWare())
+	r.Use(middlewares.AuthorizeMiddleWare())
 
 	r.GET("/get", helloGet)
 	r.GET("/get/:name", helloGetPath)
