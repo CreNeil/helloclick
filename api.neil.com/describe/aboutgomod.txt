@@ -1,0 +1,13 @@
+ 1st step
+ go mod init helloclick
+ 2nd step
+ go mod tidy -v
+ 3rd step
+ go mod verify
+ 4th step
+ go mod vendor -v
+ 5th step
+ go mod download
+ others...
+ go mod edit
+ go mod graph
