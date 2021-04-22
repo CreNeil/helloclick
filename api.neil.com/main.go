@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"helloclick/api.neil.com/middlewares"
+	"helloclick/api.neil.com/sessionutil"
 	"net/http"
 )
 
@@ -13,9 +14,15 @@ type Hello struct {
 
 func helloGet(c *gin.Context) {
 	firstname := c.DefaultQuery("firstname", "Guest")
-	//stand for c.Request.URL.Query().Get("lastname")
 	lastname := c.Query("lastname")
-	c.String(http.StatusOK, "Hello %s %s", firstname, lastname)
+
+	session := &sessionutil.Session{TTL: 60, Name: "name"}
+	value, err := session.Get(firstname)
+	if err != nil {
+		_ = session.Put(firstname, lastname+firstname)
+	}
+	//stand for c.Request.URL.Query().Get("lastname")
+	c.String(http.StatusOK, "Hello %s %s", firstname, lastname, value)
 }
 
 func helloGetPath(c *gin.Context) {
