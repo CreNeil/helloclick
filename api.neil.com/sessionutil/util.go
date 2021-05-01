@@ -1,7 +1,7 @@
 package sessionutil
 
 import (
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 	"helloclick/api.neil.com/redisutil"
 )
 
